@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-users-table
+      author: a.o.dikov
+      changes:
+        - sqlFile:
+            path: init_001.sql
+            relativeToChangelogFile: true
+      rollback:
+        - sqlFile:
+            path: rollback_001.sql
+            relativeToChangelogFile: true

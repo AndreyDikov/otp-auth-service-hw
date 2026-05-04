@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-users-only-one-admin-constraint
+      author: a.o.dikov
+      changes:
+        - sqlFile:
+            path: init_001.sql
+            relativeToChangelogFile: true
+      rollback:
+        - sqlFile:
+            path: rollback_001.sql
+            relativeToChangelogFile: true
