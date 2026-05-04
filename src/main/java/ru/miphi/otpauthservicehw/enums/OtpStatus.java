@@ -1,4 +1,4 @@
-package ru.miphi.otpauthservicehw.model;
+package ru.miphi.otpauthservicehw.enums;
 
 public enum OtpStatus {
 

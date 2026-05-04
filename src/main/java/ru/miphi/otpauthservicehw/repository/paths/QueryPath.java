@@ -1,4 +1,4 @@
-package ru.miphi.otpauthservicehw.enums;
+package ru.miphi.otpauthservicehw.repository.paths;
 
 import jakarta.annotation.Nonnull;
 import lombok.Getter;
@@ -15,6 +15,9 @@ import static lombok.AccessLevel.PRIVATE;
 public enum QueryPath {
 
     UPDATE_OTP_CONFIG("queries/update_otp_config.sql"),
+    GET_USERS("queries/get_users.sql"),
+    GET_USER_ROLE_BY_ID("queries/get_user_role_by_id.sql"),
+    DELETE_USER("queries/delete_user.sql"),
     ;
 
     @Nonnull

@@ -1,4 +1,12 @@
 package ru.miphi.otpauthservicehw.dto.request;
 
-public class LoginRequest {
+import jakarta.validation.constraints.NotBlank;
+
+public record LoginRequest(
+        @NotBlank
+        String login,
+
+        @NotBlank
+        String password
+) {
 }

@@ -1,0 +1,43 @@
+[versions]
+spring-boot = "4.0.6"
+spring-dependency-management = "1.1.7"
+java = "21"
+jjwt = "0.12.6"
+angus-mail = "2.0.5"
+jsmpp = "3.0.1"
+lombok = "1.18.38"
+springdoc-openapi = "2.8.17"
+springdoc-openapi-gradle-plugin = "1.9.0"
+
+[libraries]
+# Spring Boot starters
+spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
+spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
+spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security" }
+spring-boot-starter-jdbc = { module = "org.springframework.boot:spring-boot-starter-jdbc" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+springdoc-openapi-starter-webmvc-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc-openapi" }
+
+# Database
+postgresql = { module = "org.postgresql:postgresql" }
+liquibase-core = { module = "org.liquibase:liquibase-core" }
+
+# JWT
+jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
+jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
+jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
+
+# Notifications
+angus-mail = { module = "org.eclipse.angus:angus-mail", version.ref = "angus-mail" }
+jsmpp = { module = "org.jsmpp:jsmpp", version.ref = "jsmpp" }
+
+# Lombok
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+
+# Test runtime
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+
+[plugins]
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }
+springdoc-openapi-gradle-plugin = { id = "org.springdoc.openapi-gradle-plugin", version.ref = "springdoc-openapi-gradle-plugin" }

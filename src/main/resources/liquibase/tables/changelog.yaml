@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - include:
+      file: users/changelog.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: otp_config/changelog.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: otp_codes/changelog.yaml
+      relativeToChangelogFile: true

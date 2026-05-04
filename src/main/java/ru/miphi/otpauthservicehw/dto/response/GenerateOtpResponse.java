@@ -1,4 +1,7 @@
 package ru.miphi.otpauthservicehw.dto.response;
 
-public class GenerateOtpResponse {
+public record GenerateOtpResponse(
+        String operationId,
+        String status
+) {
 }

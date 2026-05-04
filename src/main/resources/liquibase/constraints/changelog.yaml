@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: ux_users_only_one_admin/changelog.yaml
+      relativeToChangelogFile: true

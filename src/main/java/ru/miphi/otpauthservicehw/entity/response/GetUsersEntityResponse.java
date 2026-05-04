@@ -1,4 +1,24 @@
 package ru.miphi.otpauthservicehw.entity.response;
 
-public class GetUsersEntityResponse {
-}
+import jakarta.annotation.Nonnull;
+import lombok.Builder;
+import ru.miphi.otpauthservicehw.enums.UserRole;
+
+import java.time.LocalDateTime;
+
+@Builder
+public record GetUsersEntityResponse(
+
+        @Nonnull
+        Long id,
+
+        @Nonnull
+        String login,
+
+        @Nonnull
+        UserRole role,
+
+        @Nonnull
+        LocalDateTime createdAt
+
+) {}

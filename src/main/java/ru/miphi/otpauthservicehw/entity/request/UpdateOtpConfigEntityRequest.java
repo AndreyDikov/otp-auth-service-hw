@@ -1,4 +1,15 @@
 package ru.miphi.otpauthservicehw.entity.request;
 
-public class UpdateOtpConfigEntityRequest {
-}
+import jakarta.annotation.Nonnull;
+import lombok.Builder;
+
+@Builder
+public record UpdateOtpConfigEntityRequest(
+
+        @Nonnull
+        Integer codeLength,
+
+        @Nonnull
+        Integer ttlSeconds
+
+) {}

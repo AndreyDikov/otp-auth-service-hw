@@ -1,3 +1,46 @@
 spring:
   application:
     name: otp-auth-service-hw
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/otp_service
+    username: postgres
+    password: 2906
+    driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    enabled: true
+    change-log: classpath:liquibase/changelog-master.yaml
+
+server:
+  port: 8080
+
+app:
+  jwt:
+    secret: "CHANGE_ME_CHANGE_ME_CHANGE_ME_CHANGE_ME_32_BYTES_MIN"
+    expiration: 3600000
+
+  otp:
+    expire-check-interval-ms: 60000
+
+  email:
+    username: "your_email@example.com"
+    password: "your_email_password"
+    from: "your_email@example.com"
+    smtp:
+      host: "smtp.example.com"
+      port: 587
+      auth: true
+      starttls-enable: true
+
+  smpp:
+    host: localhost
+    port: 2775
+    system-id: smppclient1
+    password: password
+    system-type: OTP
+    source-address: OTPService
+
+  telegram:
+    bot-token: "CHANGE_ME"
+    chat-id: "CHANGE_ME"
