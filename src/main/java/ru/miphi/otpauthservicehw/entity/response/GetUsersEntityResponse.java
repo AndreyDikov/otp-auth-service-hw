@@ -4,8 +4,6 @@ import jakarta.annotation.Nonnull;
 import lombok.Builder;
 import ru.miphi.otpauthservicehw.enums.UserRole;
 
-import java.time.LocalDateTime;
-
 @Builder
 public record GetUsersEntityResponse(
 
@@ -16,9 +14,6 @@ public record GetUsersEntityResponse(
         String login,
 
         @Nonnull
-        UserRole role,
-
-        @Nonnull
-        LocalDateTime createdAt
+        UserRole role
 
 ) {}

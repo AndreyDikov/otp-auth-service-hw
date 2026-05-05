@@ -25,7 +25,6 @@ public class GetUsersRepository {
                         .id(rs.getLong("id"))
                         .login(rs.getString("login"))
                         .role(UserRole.valueOf(rs.getString("role")))
-                        .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
                         .build()
                 )
                 .list();

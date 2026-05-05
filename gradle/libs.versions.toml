@@ -6,21 +6,22 @@ jjwt = "0.12.6"
 angus-mail = "2.0.5"
 jsmpp = "3.0.1"
 lombok = "1.18.38"
-springdoc-openapi = "2.8.17"
+springdoc-openapi = "3.0.1"
 springdoc-openapi-gradle-plugin = "1.9.0"
 
 [libraries]
 # Spring Boot starters
-spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
-spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
-spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security" }
-spring-boot-starter-jdbc = { module = "org.springframework.boot:spring-boot-starter-jdbc" }
-spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring-boot" }
+spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation", version.ref = "spring-boot" }
+spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security", version.ref = "spring-boot" }
+spring-boot-starter-jdbc = { module = "org.springframework.boot:spring-boot-starter-jdbc", version.ref = "spring-boot" }
+spring-boot-starter-aspectj = { module = "org.springframework.boot:spring-boot-starter-aspectj", version.ref = "spring-boot" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot" }
 springdoc-openapi-starter-webmvc-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc-openapi" }
+spring-boot-starter-liquibase = { module = "org.springframework.boot:spring-boot-starter-liquibase", version.ref = "spring-boot" }
 
 # Database
 postgresql = { module = "org.postgresql:postgresql" }
-liquibase-core = { module = "org.liquibase:liquibase-core" }
 
 # JWT
 jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }

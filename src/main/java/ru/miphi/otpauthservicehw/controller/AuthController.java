@@ -1,30 +1,42 @@
 package ru.miphi.otpauthservicehw.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.miphi.otpauthservicehw.dto.request.LoginRequest;
 import ru.miphi.otpauthservicehw.dto.request.RegisterRequest;
-import ru.miphi.otpauthservicehw.dto.response.AuthResponse;
-import ru.miphi.otpauthservicehw.dto.response.UserResponse;
-import ru.miphi.otpauthservicehw.service.AuthService;
+import ru.miphi.otpauthservicehw.dto.response.LoginResponse;
+import ru.miphi.otpauthservicehw.dto.response.RegisterResponse;
+import ru.miphi.otpauthservicehw.service.LoginService;
+import ru.miphi.otpauthservicehw.service.RegisterService;
+
+import static lombok.AccessLevel.PRIVATE;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequiredArgsConstructor
+@FieldDefaults(level = PRIVATE, makeFinal = true)
 public class AuthController {
 
-    private final AuthService authService;
+    public static final String BASE = "/auth";
+    public static final String REGISTER = BASE + "/register";
+    public static final String LOGIN = BASE + "/login";
 
-    public AuthController(AuthService authService) {
-        this.authService = authService;
+    RegisterService registerService;
+    LoginService loginService;
+
+    @PostMapping(REGISTER)
+    @Operation(summary = "регистрация пользователя")
+    public ResponseEntity<RegisterResponse> register(@RequestBody @Valid RegisterRequest request) {
+        return ResponseEntity.ok(registerService.register(request));
     }
 
-    @PostMapping("/register")
-    public UserResponse register(@RequestBody @Valid RegisterRequest request) {
-        return authService.register(request);
+    @PostMapping(LOGIN)
+    @Operation(summary = "аутентификация пользователя")
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest request) {
+        return ResponseEntity.ok(loginService.login(request));
     }
 
-    @PostMapping("/login")
-    public AuthResponse login(@RequestBody @Valid LoginRequest request) {
-        return authService.login(request);
-    }
 }

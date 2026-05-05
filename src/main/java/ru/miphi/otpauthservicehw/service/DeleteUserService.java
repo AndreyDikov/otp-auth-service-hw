@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.miphi.otpauthservicehw.enums.UserRole;
 import ru.miphi.otpauthservicehw.exception.BusinessLogicException;
 import ru.miphi.otpauthservicehw.repository.DeleteUserRepository;
+
+import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
 import static ru.miphi.otpauthservicehw.enums.UserRole.ADMIN;
@@ -20,18 +23,17 @@ public class DeleteUserService {
 
     @Transactional
     public void deleteUser(Long userId) {
-        deleteUserRepository.findUserRoleById(userId)
-                .filter(role -> role != ADMIN)
-                .ifPresentOrElse(
-                        role -> deleteUserRepository.deleteUser(userId),
-                        () -> {
-                            if (deleteUserRepository.findUserRoleById(userId)
-                                    .filter(role -> role == ADMIN)
-                                    .isPresent()) {
-                                throw BusinessLogicException.of(ADMIN_DELETE_FORBIDDEN);
-                            }
-                        }
-                );
+        Optional<UserRole> userRole = deleteUserRepository.findUserRoleById(userId);
+
+        if (userRole.isEmpty()) {
+            return;
+        }
+
+        if (userRole.get() == ADMIN) {
+            throw BusinessLogicException.of(ADMIN_DELETE_FORBIDDEN);
+        }
+
+        deleteUserRepository.deleteUser(userId);
     }
 
 }

@@ -30,7 +30,7 @@ dependencies {
     // database
     implementation(libs.spring.boot.starter.jdbc)
     implementation(libs.postgresql)
-    implementation(libs.liquibase.core)
+    implementation(libs.spring.boot.starter.liquibase)
 
     // jwt
     implementation(libs.jjwt.api)
@@ -49,6 +49,9 @@ dependencies {
 
     // openapi
     implementation(libs.springdoc.openapi.starter.webmvc.ui)
+
+    // aop
+    implementation(libs.spring.boot.starter.aspectj)
 
     // test
     testImplementation(libs.spring.boot.starter.test)

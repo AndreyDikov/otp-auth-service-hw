@@ -1,98 +1,84 @@
 package ru.miphi.otpauthservicehw.config;
 
-import io.jsonwebtoken.Claims;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.web.filter.OncePerRequestFilter;
-import ru.miphi.otpauthservicehw.service.JwtService;
+import ru.miphi.otpauthservicehw.controller.AdminController;
+import ru.miphi.otpauthservicehw.controller.OtpController;
+import ru.miphi.otpauthservicehw.security.JwtAuthenticationFilter;
+import ru.miphi.otpauthservicehw.security.SecurityErrorResponseWriter;
 
-import java.io.IOException;
+import static lombok.AccessLevel.PRIVATE;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+import static ru.miphi.otpauthservicehw.controller.AuthController.LOGIN;
+import static ru.miphi.otpauthservicehw.controller.AuthController.REGISTER;
+import static ru.miphi.otpauthservicehw.enums.UserRole.ADMIN;
+import static ru.miphi.otpauthservicehw.enums.UserRole.USER;
+import static ru.miphi.otpauthservicehw.exception.ErrorType.ACCESS_DENIED;
+import static ru.miphi.otpauthservicehw.exception.ErrorType.AUTHORIZATION_HEADER_NOT_FOUND;
+import static ru.miphi.otpauthservicehw.security.JwtAuthenticationFilter.*;
 
 @Configuration
+@RequiredArgsConstructor
+@FieldDefaults(level = PRIVATE, makeFinal = true)
 public class SecurityConfig {
 
+    private static final String ALL = "/**";
+    public static final String ADMIN_ALL = AdminController.BASE + ALL;
+    public static final String OTP_ALL = OtpController.BASE + ALL;
+    public static final String V3_API_DOCS_ALL = V3_API_DOCS + ALL;
+    public static final String SWAGGER_UI_ALL = SWAGGER_UI + ALL;
+
+    JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    SecurityErrorResponseWriter securityErrorResponseWriter;
+
     @Bean
-    public BCryptPasswordEncoder bcryptPasswordEncoder() {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+        return http.csrf(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .logout(AbstractHttpConfigurer::disable)
+                .sessionManagement(sessionManagement -> sessionManagement
+                        .sessionCreationPolicy(STATELESS)
+                )
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint((request, response, exception) ->
+                                securityErrorResponseWriter.write(response, AUTHORIZATION_HEADER_NOT_FOUND)
+                        )
+                        .accessDeniedHandler((request, response, exception) ->
+                                securityErrorResponseWriter.write(response, ACCESS_DENIED)
+                        )
+                )
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(POST, REGISTER).permitAll()
+                        .requestMatchers(POST, LOGIN).permitAll()
+
+                        .requestMatchers(V3_API_DOCS_ALL).permitAll()
+                        .requestMatchers(SWAGGER_UI_ALL).permitAll()
+                        .requestMatchers(SWAGGER_UI_HTML).permitAll()
+                        .requestMatchers(V3_API_DOCS_YAML).permitAll()
+
+                        .requestMatchers(ADMIN_ALL).hasRole(ADMIN.name())
+                        .requestMatchers(OTP_ALL).hasRole(USER.name())
+
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http,
-            JwtService jwtService
-    ) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable);
-
-        http.authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                .anyRequest().permitAll()
-        );
-
-        http.addFilterBefore(
-                new JwtRequestFilter(jwtService),
-                UsernamePasswordAuthenticationFilter.class
-        );
-
-        return http.build();
-    }
-
-    static class JwtRequestFilter extends OncePerRequestFilter {
-
-        private final JwtService jwtService;
-
-        JwtRequestFilter(JwtService jwtService) {
-            this.jwtService = jwtService;
-        }
-
-        @Override
-        protected boolean shouldNotFilter(HttpServletRequest request) {
-            String path = request.getRequestURI();
-            return path.equals("/api/auth/register") || path.equals("/api/auth/login");
-        }
-
-        @Override
-        protected void doFilterInternal(
-                HttpServletRequest request,
-                HttpServletResponse response,
-                FilterChain filterChain
-        ) throws ServletException, IOException {
-            String header = request.getHeader("Authorization");
-
-            if (header == null || !header.startsWith("Bearer ")) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
-            }
-
-            try {
-                String token = header.substring("Bearer ".length());
-                Claims claims = jwtService.parseToken(token);
-
-                Long userId = Long.valueOf(claims.getSubject());
-                String role = claims.get("role", String.class);
-
-                if (request.getRequestURI().startsWith("/api/admin") && !"ADMIN".equals(role)) {
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                    return;
-                }
-
-                request.setAttribute("userId", userId);
-                request.setAttribute("role", role);
-
-                filterChain.doFilter(request, response);
-            } catch (Exception e) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            }
-        }
-    }
 }

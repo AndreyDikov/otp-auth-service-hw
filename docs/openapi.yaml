@@ -1,0 +1,291 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /otp/validate:
+    post:
+      tags:
+      - otp-controller
+      summary: валидация otp-кода
+      operationId: validateOtp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ValidateOtpRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ValidateOtpResponse"
+  /otp/generate:
+    post:
+      tags:
+      - otp-controller
+      summary: генерация otp-кода
+      operationId: generateOtp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenerateOtpRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/GenerateOtpResponse"
+  /auth/register:
+    post:
+      tags:
+      - auth-controller
+      summary: регистрация пользователя
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/RegisterResponse"
+  /auth/login:
+    post:
+      tags:
+      - auth-controller
+      summary: аутентификация пользователя
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+  /admin/otp-config:
+    patch:
+      tags:
+      - admin-controller
+      summary: изменение конфигурации otp-кодов
+      operationId: updateOtpConfig
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateOtpConfigRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OtpConfigResponse"
+  /admin/users:
+    get:
+      tags:
+      - admin-controller
+      summary: получение списка пользователей
+      operationId: getUsers
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserResponse"
+  /admin/users/{id}:
+    delete:
+      tags:
+      - admin-controller
+      summary: удаление пользователя по ID
+      operationId: deleteUser
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+components:
+  schemas:
+    ValidateOtpRequest:
+      type: object
+      properties:
+        operation_id:
+          type: string
+          maxLength: 255
+          minLength: 1
+        code:
+          type: string
+          maxLength: 10
+          minLength: 4
+      required:
+      - code
+      - operation_id
+    ValidateOtpResponse:
+      type: object
+      properties:
+        operation_id:
+          type: string
+        valid:
+          type: boolean
+      required:
+      - operation_id
+      - valid
+    GenerateOtpRequest:
+      type: object
+      properties:
+        operation_id:
+          type: string
+          maxLength: 255
+          minLength: 1
+        notification_channel:
+          type: string
+          enum:
+          - EMAIL
+          - SMS
+          - TELEGRAM
+          - FILE
+        destination:
+          type: string
+          maxLength: 255
+          minLength: 1
+      required:
+      - destination
+      - notification_channel
+      - operation_id
+    GenerateOtpResponse:
+      type: object
+      properties:
+        operation_id:
+          type: string
+      required:
+      - operation_id
+    RegisterRequest:
+      type: object
+      properties:
+        login:
+          type: string
+          maxLength: 100
+          minLength: 3
+        password:
+          type: string
+          maxLength: 100
+          minLength: 6
+        role:
+          type: string
+          enum:
+          - ADMIN
+          - USER
+      required:
+      - login
+      - password
+      - role
+    RegisterResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        login:
+          type: string
+        role:
+          type: string
+          enum:
+          - ADMIN
+          - USER
+      required:
+      - id
+      - login
+      - role
+    LoginRequest:
+      type: object
+      properties:
+        login:
+          type: string
+          maxLength: 100
+          minLength: 3
+        password:
+          type: string
+          maxLength: 100
+          minLength: 6
+      required:
+      - login
+      - password
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+      required:
+      - token
+    UpdateOtpConfigRequest:
+      type: object
+      properties:
+        code_length:
+          type: integer
+          format: int32
+          maximum: 10
+          minimum: 4
+        ttl_seconds:
+          type: integer
+          format: int32
+          minimum: 1
+      required:
+      - code_length
+      - ttl_seconds
+    OtpConfigResponse:
+      type: object
+      properties:
+        code_length:
+          type: integer
+          format: int32
+        ttl_seconds:
+          type: integer
+          format: int32
+      required:
+      - code_length
+      - ttl_seconds
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        login:
+          type: string
+        role:
+          type: string
+          enum:
+          - ADMIN
+          - USER
+      required:
+      - id
+      - login
+      - role

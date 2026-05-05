@@ -1,7 +1,6 @@
 select id,
     login,
-    role,
-    created_at
+    role
 from users
 where role <> 'ADMIN'
 order by id

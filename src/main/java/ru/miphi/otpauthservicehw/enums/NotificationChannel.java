@@ -6,5 +6,6 @@ public enum NotificationChannel {
     SMS,
     TELEGRAM,
     FILE,
+    ;
 
 }
