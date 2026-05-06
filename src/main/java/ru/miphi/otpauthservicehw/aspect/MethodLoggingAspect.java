@@ -26,17 +26,17 @@ public class MethodLoggingAspect {
 
     @Around("controllerLayer()")
     public Object logControllerMethod(ProceedingJoinPoint joinPoint) throws Throwable {
-        return logMethod(joinPoint, "controller");
+        return logMethod(joinPoint, "КОНТРОЛЛЕРА");
     }
 
     @Around("serviceLayer()")
     public Object logServiceMethod(ProceedingJoinPoint joinPoint) throws Throwable {
-        return logMethod(joinPoint, "service");
+        return logMethod(joinPoint, "СЕРВИСА");
     }
 
     @Around("repositoryLayer()")
     public Object logRepositoryMethod(ProceedingJoinPoint joinPoint) throws Throwable {
-        return logMethod(joinPoint, "repository");
+        return logMethod(joinPoint, "РЕПОЗИТОРИЯ");
     }
 
     @Before("@annotation(org.springframework.scheduling.annotation.Scheduled)")
@@ -48,7 +48,7 @@ public class MethodLoggingAspect {
         String methodName = joinPoint.getSignature()
                 .getName();
 
-        log.info("scheduled method started: {}.{}", className, methodName);
+        log.info("ЗАПУЩЕН ШЕДУЛЕР: {}.{}", className, methodName);
     }
 
     private Object logMethod(
@@ -64,21 +64,27 @@ public class MethodLoggingAspect {
 
         long startTime = System.currentTimeMillis();
 
-        log.info("{} method started: {}.{}", layer, className, methodName);
+        log.info("НАЧАЛО РАБОТЫ МЕТОДА {}: {}.{}", layer, className, methodName);
 
         try {
             Object result = joinPoint.proceed();
 
             long durationMs = System.currentTimeMillis() - startTime;
 
-            log.info("{} method finished: {}.{} duration_ms={}", layer, className, methodName, durationMs);
+            log.info(
+                    "МЕТОД {} УСПЕШНО ЗАВЕРШЁН: {}.{} ВРЕМЯ_ВЫПОЛНЕНИЯ_МС={}",
+                    layer,
+                    className,
+                    methodName,
+                    durationMs
+            );
 
             return result;
         } catch (Throwable throwable) {
             long durationMs = System.currentTimeMillis() - startTime;
 
             log.error(
-                    "{} method failed: {}.{} duration_ms={} error={}",
+                    "МЕТОД {} ЗАВЕРШИЛСЯ С ОШИБКОЙ: {}.{} ВРЕМЯ_ВЫПОЛНЕНИЯ_МС={} ОШИБКА={}",
                     layer,
                     className,
                     methodName,

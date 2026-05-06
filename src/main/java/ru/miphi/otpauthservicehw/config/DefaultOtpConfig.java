@@ -31,7 +31,7 @@ public class DefaultOtpConfig {
                     .update();
 
             if (insertedRows > 0) {
-                log.info("default otp config initialized");
+                log.info("Инициализация конфигурации OTP по умолчанию");
             }
         };
     }

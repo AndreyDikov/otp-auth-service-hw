@@ -28,6 +28,10 @@ public enum QueryPath {
     MARK_OTP_CODE_USED("queries/mark_otp_code_used.sql"),
     MARK_OTP_CODE_EXPIRED("queries/mark_otp_code_expired.sql"),
     EXPIRE_OTP_CODES("queries/expire_otp_codes.sql"),
+    CREATE_NOTIFICATION_OUTBOX("queries/create_notification_outbox.sql"),
+    GET_PENDING_NOTIFICATION_OUTBOX("queries/get_pending_notification_outbox.sql"),
+    MARK_NOTIFICATION_OUTBOX_SENT("queries/mark_notification_outbox_sent.sql"),
+    MARK_NOTIFICATION_OUTBOX_FAILED("queries/mark_notification_outbox_failed.sql"),
     ;
 
     @Nonnull

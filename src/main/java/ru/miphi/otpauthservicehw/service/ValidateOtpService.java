@@ -28,10 +28,7 @@ public class ValidateOtpService {
     PasswordEncoder passwordEncoder;
 
     @Transactional
-    public ValidateOtpResponse validateOtp(
-            Long userId,
-            @Nonnull ValidateOtpRequest request
-    ) {
+    public ValidateOtpResponse validateOtp(Long userId, @Nonnull ValidateOtpRequest request) {
         String operationId = request.operationId();
 
         ValidateOtpEntityResponse otpCode = validateOtpRepository.getActiveOtpCode(ValidateOtpEntityRequest.builder()
@@ -54,10 +51,7 @@ public class ValidateOtpService {
                 .build();
     }
 
-    private void validateAndExpireIfNeeded(
-            @Nonnull ValidateOtpEntityResponse otpCode,
-            ValidateOtpRequest request
-    ) {
+    private void validateAndExpireIfNeeded(@Nonnull ValidateOtpEntityResponse otpCode, ValidateOtpRequest request) {
         if (otpCode.expiresAt().isBefore(LocalDateTime.now())) {
             validateOtpRepository.markOtpCodeExpired(otpCode.id());
             throw BusinessLogicException.of(OTP_CODE_EXPIRED);

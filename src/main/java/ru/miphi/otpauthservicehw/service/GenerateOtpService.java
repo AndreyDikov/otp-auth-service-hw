@@ -5,13 +5,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.miphi.otpauthservicehw.client.resolver.NotificationClientResolver;
+import org.springframework.transaction.annotation.Transactional;
 import ru.miphi.otpauthservicehw.dto.request.GenerateOtpRequest;
 import ru.miphi.otpauthservicehw.dto.response.GenerateOtpResponse;
+import ru.miphi.otpauthservicehw.entity.request.CreateNotificationOutboxEntityRequest;
 import ru.miphi.otpauthservicehw.entity.request.CreateOtpCodeEntityRequest;
 import ru.miphi.otpauthservicehw.entity.response.GenerateOtpConfigEntityResponse;
 import ru.miphi.otpauthservicehw.exception.BusinessLogicException;
 import ru.miphi.otpauthservicehw.repository.GenerateOtpRepository;
+import ru.miphi.otpauthservicehw.security.OtpCodeCryptoProvider;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -31,8 +33,9 @@ public class GenerateOtpService {
     GenerateOtpRepository generateOtpRepository;
 
     PasswordEncoder passwordEncoder;
-    NotificationClientResolver notificationClientResolver;
+    OtpCodeCryptoProvider otpCodeCryptoProvider;
 
+    @Transactional
     public GenerateOtpResponse generateOtp(Long userId, @Nonnull GenerateOtpRequest request) {
         GenerateOtpConfigEntityResponse otpConfig = generateOtpRepository.getOtpConfig()
                 .orElseThrow(() -> BusinessLogicException.of(OTP_CONFIG_NOT_FOUND));
@@ -48,9 +51,12 @@ public class GenerateOtpService {
                 .build()
         );
 
-        //todo: нужен outbox
-        notificationClientResolver.resolve(request.notificationChannel())
-                .sendCode(request.destination(), code);
+        generateOtpRepository.createNotificationOutbox(CreateNotificationOutboxEntityRequest.builder()
+                .notificationChannel(request.notificationChannel())
+                .destination(request.destination())
+                .encryptedCode(otpCodeCryptoProvider.encrypt(code))
+                .build()
+        );
 
         return GenerateOtpResponse.builder()
                 .operationId(operationId)

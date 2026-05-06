@@ -4,10 +4,14 @@ import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.miphi.otpauthservicehw.dto.response.ErrorResponse;
+import ru.miphi.otpauthservicehw.dto.response.ValidationErrorResponse;
+
+import java.util.List;
 
 import static ru.miphi.otpauthservicehw.exception.ErrorType.INTERNAL_ERROR;
 import static ru.miphi.otpauthservicehw.exception.ErrorType.VALIDATION_ERROR;
@@ -20,51 +24,65 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleBusinessLogicException(@Nonnull BusinessLogicException exception) {
         ErrorType errorType = exception.getErrorType();
 
-        return buildResponse(
+        return buildErrorResponse(
                 errorType,
                 errorType.getMessage()
         );
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
+    public ResponseEntity<ValidationErrorResponse> handleMethodArgumentNotValidException(
             @Nonnull MethodArgumentNotValidException exception
     ) {
-        String message = exception.getBindingResult()
+        List<ValidationErrorResponse.FieldErrorResponse> fieldErrors = exception.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .findFirst()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .orElse(VALIDATION_ERROR.getMessage());
+                .map(GlobalExceptionHandler::mapToFieldErrorResponse)
+                .toList();
 
-        return buildResponse(
-                VALIDATION_ERROR,
-                message
-        );
+        return ResponseEntity.status(VALIDATION_ERROR.getStatus())
+                .body(ValidationErrorResponse.builder()
+                        .errorCode(VALIDATION_ERROR.getCode())
+                        .message(VALIDATION_ERROR.getMessage())
+                        .fieldErrors(fieldErrors)
+                        .build()
+                );
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(Exception exception) {
-        log.error("unexpected error", exception);
+    public ResponseEntity<ErrorResponse> handleException(@Nonnull Exception exception) {
+        log.error("Неожиданная ошибка", exception);
 
-        return buildResponse(
+        return buildErrorResponse(
                 INTERNAL_ERROR,
                 INTERNAL_ERROR.getMessage()
         );
     }
 
     @Nonnull
-    private ResponseEntity<ErrorResponse> buildResponse(
-            @Nonnull ErrorType errorType,
-            String message
+    private static ValidationErrorResponse.FieldErrorResponse mapToFieldErrorResponse(
+            @Nonnull FieldError fieldError
     ) {
-        return ResponseEntity
-                .status(errorType.getStatus())
+        return ValidationErrorResponse.FieldErrorResponse.builder()
+                .field(toSnakeCase(fieldError.getField()))
+                .message(fieldError.getDefaultMessage())
+                .build();
+    }
+
+    @Nonnull
+    private ResponseEntity<ErrorResponse> buildErrorResponse(@Nonnull ErrorType errorType, String message) {
+        return ResponseEntity.status(errorType.getStatus())
                 .body(ErrorResponse.builder()
                         .errorCode(errorType.getCode())
                         .message(message)
                         .build()
                 );
+    }
+
+    @Nonnull
+    private static String toSnakeCase(@Nonnull String value) {
+        return value.replaceAll("([a-z])([A-Z])", "$1_$2")
+                .toLowerCase();
     }
 
 }

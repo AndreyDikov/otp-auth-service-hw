@@ -8,3 +8,6 @@ databaseChangeLog:
   - include:
       file: otp_codes/changelog.yaml
       relativeToChangelogFile: true
+  - include:
+      file: notification_outbox/changelog.yaml
+      relativeToChangelogFile: true

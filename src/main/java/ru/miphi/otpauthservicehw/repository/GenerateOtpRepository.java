@@ -5,14 +5,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
+import ru.miphi.otpauthservicehw.entity.request.CreateNotificationOutboxEntityRequest;
 import ru.miphi.otpauthservicehw.entity.request.CreateOtpCodeEntityRequest;
 import ru.miphi.otpauthservicehw.entity.response.GenerateOtpConfigEntityResponse;
 
 import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
-import static ru.miphi.otpauthservicehw.repository.paths.QueryPath.CREATE_OTP_CODE;
-import static ru.miphi.otpauthservicehw.repository.paths.QueryPath.GET_OTP_CONFIG;
+import static ru.miphi.otpauthservicehw.repository.paths.QueryPath.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -37,6 +37,14 @@ public class GenerateOtpRepository {
                 .param("operation_id", request.operationId())
                 .param("code_hash", request.codeHash())
                 .param("expires_at", request.expiresAt())
+                .update();
+    }
+
+    public void createNotificationOutbox(@Nonnull CreateNotificationOutboxEntityRequest request) {
+        jdbcClient.sql(CREATE_NOTIFICATION_OUTBOX.sql())
+                .param("notification_channel", request.notificationChannel().name())
+                .param("destination", request.destination())
+                .param("encrypted_code", request.encryptedCode())
                 .update();
     }
 
