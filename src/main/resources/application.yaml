@@ -6,8 +6,8 @@ spring:
     name: otp-auth-service-hw
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/otp_service
-    username: postgres
+    url: ""
+    username: ""
     password: ""
     driver-class-name: org.postgresql.Driver
 
