@@ -12,7 +12,9 @@ import ru.miphi.otpauthservicehw.enums.NotificationChannel;
 import java.util.List;
 
 import static lombok.AccessLevel.PRIVATE;
-import static ru.miphi.otpauthservicehw.enums.QueryPath.*;
+import static ru.miphi.otpauthservicehw.enums.QueryPath.CLAIM_PENDING_NOTIFICATION_OUTBOX;
+import static ru.miphi.otpauthservicehw.enums.QueryPath.MARK_NOTIFICATION_OUTBOX_FAILED;
+import static ru.miphi.otpauthservicehw.enums.QueryPath.MARK_NOTIFICATION_OUTBOX_SENT;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,12 +23,14 @@ public class NotificationOutboxRepository {
 
     JdbcClient jdbcClient;
 
-    public List<NotificationOutboxEntityResponse> getPendingNotifications(Integer limit) {
-        return jdbcClient.sql(GET_PENDING_NOTIFICATION_OUTBOX.sql())
+    public List<NotificationOutboxEntityResponse> claimPendingNotifications(Integer limit) {
+        return jdbcClient.sql(CLAIM_PENDING_NOTIFICATION_OUTBOX.sql())
                 .param("limit", limit)
                 .query((rs, rowNum) -> NotificationOutboxEntityResponse.builder()
                         .id(rs.getLong("id"))
-                        .notificationChannel(NotificationChannel.valueOf(rs.getString("notification_channel")))
+                        .notificationChannel(NotificationChannel.valueOf(
+                                rs.getString("notification_channel")
+                        ))
                         .destination(rs.getString("destination"))
                         .encryptedCode(rs.getString("encrypted_code"))
                         .attempts(rs.getInt("attempts"))

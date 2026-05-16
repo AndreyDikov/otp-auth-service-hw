@@ -38,7 +38,7 @@ public enum QueryPath {
 
     EXPIRE_OTP_CODES("queries/expire_otp_codes/expire_otp_codes.sql"),
 
-    GET_PENDING_NOTIFICATION_OUTBOX("queries/notification_outbox/get_pending_notification_outbox.sql"),
+    CLAIM_PENDING_NOTIFICATION_OUTBOX("queries/notification_outbox/claim_pending_notification_outbox.sql"),
     MARK_NOTIFICATION_OUTBOX_SENT("queries/notification_outbox/mark_notification_outbox_sent.sql"),
     MARK_NOTIFICATION_OUTBOX_FAILED("queries/notification_outbox/mark_notification_outbox_failed.sql"),
     ;

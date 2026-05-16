@@ -10,3 +10,15 @@ databaseChangeLog:
         - sqlFile:
             path: rollback_001.sql
             relativeToChangelogFile: true
+
+  - changeSet:
+      id: update-notification-outbox-status-constraint
+      author: a.o.dikov
+      changes:
+        - sqlFile:
+            path: init_002.sql
+            relativeToChangelogFile: true
+      rollback:
+        - sqlFile:
+            path: rollback_002.sql
+            relativeToChangelogFile: true

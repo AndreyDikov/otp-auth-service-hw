@@ -7,6 +7,6 @@ set status = case
     error_message = :error_message,
     processed_at = case
         when attempts + 1 >= :max_attempts then now()
-        else processed_at
     end
 where id = :id
+    and status = 'PROCESSING'

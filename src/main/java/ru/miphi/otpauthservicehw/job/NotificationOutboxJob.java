@@ -33,11 +33,11 @@ public class NotificationOutboxJob {
             initialDelayString = "${app.job.notification-outbox.initial-delay-ms}"
     )
     public void processOutbox() {
-        notificationOutboxRepository.getPendingNotifications(properties.batchSize())
+        notificationOutboxRepository.claimPendingNotifications(properties.batchSize())
                 .forEach(this::processNotification);
     }
 
-    private void processNotification(@Nonnull NotificationOutboxEntityResponse notification) {
+    private void processNotification(NotificationOutboxEntityResponse notification) {
         try {
             String code = otpCodeCryptoProvider.decrypt(notification.encryptedCode());
 
@@ -57,7 +57,6 @@ public class NotificationOutboxJob {
         }
     }
 
-    @Nonnull
     private String getErrorMessage(@Nonnull Exception exception) {
         String message = exception.getMessage();
 

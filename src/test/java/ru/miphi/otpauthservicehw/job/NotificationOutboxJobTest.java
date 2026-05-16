@@ -63,12 +63,12 @@ class NotificationOutboxJobTest {
         void pendingNotificationsNotFound_shouldDoNothing() {
             when(properties.batchSize())
                     .thenReturn(BATCH_SIZE);
-            when(notificationOutboxRepository.getPendingNotifications(BATCH_SIZE))
+            when(notificationOutboxRepository.claimPendingNotifications(BATCH_SIZE))
                     .thenReturn(List.of());
 
             notificationOutboxJob.processOutbox();
 
-            verify(notificationOutboxRepository).getPendingNotifications(BATCH_SIZE);
+            verify(notificationOutboxRepository).claimPendingNotifications(BATCH_SIZE);
             verify(otpCodeCryptoProvider, never()).decrypt(ENCRYPTED_CODE);
             verify(notificationClientResolver, never()).resolve(EMAIL);
             verify(notificationOutboxRepository, never()).markSent(NOTIFICATION_ID);
@@ -79,7 +79,7 @@ class NotificationOutboxJobTest {
         void notificationSent_shouldMarkSent() {
             when(properties.batchSize())
                     .thenReturn(BATCH_SIZE);
-            when(notificationOutboxRepository.getPendingNotifications(BATCH_SIZE))
+            when(notificationOutboxRepository.claimPendingNotifications(BATCH_SIZE))
                     .thenReturn(List.of(buildNotification()));
             when(otpCodeCryptoProvider.decrypt(ENCRYPTED_CODE))
                     .thenReturn(CODE);
@@ -88,7 +88,7 @@ class NotificationOutboxJobTest {
 
             notificationOutboxJob.processOutbox();
 
-            verify(notificationOutboxRepository).getPendingNotifications(BATCH_SIZE);
+            verify(notificationOutboxRepository).claimPendingNotifications(BATCH_SIZE);
             verify(otpCodeCryptoProvider).decrypt(ENCRYPTED_CODE);
             verify(notificationClientResolver).resolve(EMAIL);
             verify(notificationClient).sendCode(DESTINATION, CODE);
@@ -108,7 +108,7 @@ class NotificationOutboxJobTest {
                     .thenReturn(MAX_ATTEMPTS);
             when(properties.maxErrorMessageLength())
                     .thenReturn(MAX_ERROR_MESSAGE_LENGTH);
-            when(notificationOutboxRepository.getPendingNotifications(BATCH_SIZE))
+            when(notificationOutboxRepository.claimPendingNotifications(BATCH_SIZE))
                     .thenReturn(List.of(buildNotification()));
             when(otpCodeCryptoProvider.decrypt(ENCRYPTED_CODE))
                     .thenThrow(exception);
@@ -142,7 +142,7 @@ class NotificationOutboxJobTest {
                     .thenReturn(MAX_ATTEMPTS);
             when(properties.maxErrorMessageLength())
                     .thenReturn(MAX_ERROR_MESSAGE_LENGTH);
-            when(notificationOutboxRepository.getPendingNotifications(BATCH_SIZE))
+            when(notificationOutboxRepository.claimPendingNotifications(BATCH_SIZE))
                     .thenReturn(List.of(buildNotification()));
             when(otpCodeCryptoProvider.decrypt(ENCRYPTED_CODE))
                     .thenReturn(CODE);
@@ -180,7 +180,7 @@ class NotificationOutboxJobTest {
                     .thenReturn(MAX_ATTEMPTS);
             when(properties.maxErrorMessageLength())
                     .thenReturn(MAX_ERROR_MESSAGE_LENGTH);
-            when(notificationOutboxRepository.getPendingNotifications(BATCH_SIZE))
+            when(notificationOutboxRepository.claimPendingNotifications(BATCH_SIZE))
                     .thenReturn(List.of(buildNotification()));
             when(otpCodeCryptoProvider.decrypt(ENCRYPTED_CODE))
                     .thenThrow(exception);
