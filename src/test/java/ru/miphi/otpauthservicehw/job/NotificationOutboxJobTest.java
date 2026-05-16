@@ -19,6 +19,7 @@ import ru.miphi.otpauthservicehw.security.OtpCodeCryptoProvider;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -94,7 +95,7 @@ class NotificationOutboxJobTest {
             verify(notificationClient).sendCode(DESTINATION, CODE);
             verify(notificationOutboxRepository).markSent(NOTIFICATION_ID);
             verify(notificationOutboxRepository, never())
-                    .markFailed(org.mockito.ArgumentMatchers.any());
+                    .markFailed(any());
         }
 
         @Test

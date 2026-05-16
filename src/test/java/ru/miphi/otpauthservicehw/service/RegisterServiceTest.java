@@ -18,6 +18,7 @@ import ru.miphi.otpauthservicehw.repository.RegisterRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -63,7 +64,7 @@ class RegisterServiceTest {
             verify(registerRepository).existsUserByLogin(LOGIN);
             verify(registerRepository, never()).existsAdmin();
             verify(passwordEncoder, never()).encode(PASSWORD);
-            verify(registerRepository, never()).registerUser(org.mockito.ArgumentMatchers.any());
+            verify(registerRepository, never()).registerUser(any());
         }
 
         @Test
@@ -84,7 +85,7 @@ class RegisterServiceTest {
             verify(registerRepository).existsUserByLogin(LOGIN);
             verify(registerRepository).existsAdmin();
             verify(passwordEncoder, never()).encode(PASSWORD);
-            verify(registerRepository, never()).registerUser(org.mockito.ArgumentMatchers.any());
+            verify(registerRepository, never()).registerUser(any());
         }
 
         @Test
@@ -105,7 +106,7 @@ class RegisterServiceTest {
             verify(registerRepository).existsUserByLogin(LOGIN);
             verify(registerRepository, never()).existsAdmin();
             verify(passwordEncoder).encode(PASSWORD);
-            verify(registerRepository, never()).registerUser(org.mockito.ArgumentMatchers.any());
+            verify(registerRepository, never()).registerUser(any());
         }
 
         @Test
@@ -115,7 +116,7 @@ class RegisterServiceTest {
                     .thenReturn(false);
             when(passwordEncoder.encode(PASSWORD))
                     .thenReturn(PASSWORD_HASH);
-            when(registerRepository.registerUser(org.mockito.ArgumentMatchers.any()))
+            when(registerRepository.registerUser(any()))
                     .thenReturn(buildUserEntityResponse());
 
             RegisterResponse response = registerService.register(buildUserRequest());
@@ -148,7 +149,7 @@ class RegisterServiceTest {
                     .thenReturn(false);
             when(passwordEncoder.encode(PASSWORD))
                     .thenReturn(PASSWORD_HASH);
-            when(registerRepository.registerUser(org.mockito.ArgumentMatchers.any()))
+            when(registerRepository.registerUser(any()))
                     .thenReturn(buildAdminEntityResponse());
 
             RegisterResponse response = registerService.register(buildAdminRequest());

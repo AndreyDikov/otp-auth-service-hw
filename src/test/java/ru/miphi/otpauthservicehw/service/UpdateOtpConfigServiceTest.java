@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static ru.miphi.otpauthservicehw.exception.ErrorType.OTP_CONFIG_NOT_FOUND;
@@ -44,7 +45,7 @@ class UpdateOtpConfigServiceTest {
         @Test
         @DisplayName("если конфигурация otp-кодов не найдена, метод выбрасывает бизнес-исключение")
         void otpConfigNotFound_shouldThrowBusinessLogicException() {
-            when(updateOtpConfigRepository.updateOtpConfig(org.mockito.ArgumentMatchers.any()))
+            when(updateOtpConfigRepository.updateOtpConfig(any()))
                     .thenReturn(Optional.empty());
 
             BusinessLogicException exception = assertThrows(
@@ -68,7 +69,7 @@ class UpdateOtpConfigServiceTest {
         @Test
         @DisplayName("если конфигурация otp-кодов найдена, метод обновляет конфигурацию")
         void otpConfigFound_shouldUpdateOtpConfig() {
-            when(updateOtpConfigRepository.updateOtpConfig(org.mockito.ArgumentMatchers.any()))
+            when(updateOtpConfigRepository.updateOtpConfig(any()))
                     .thenReturn(Optional.of(buildEntityResponse()));
 
             OtpConfigResponse response = updateOtpConfigService.updateOtpConfig(buildRequest());

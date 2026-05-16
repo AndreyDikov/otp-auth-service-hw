@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -53,7 +54,7 @@ class ValidateOtpServiceTest {
         @Test
         @DisplayName("если активный otp-код не найден, метод выбрасывает бизнес-исключение")
         void activeOtpCodeNotFound_shouldThrowBusinessLogicException() {
-            when(validateOtpRepository.getActiveOtpCode(org.mockito.ArgumentMatchers.any()))
+            when(validateOtpRepository.getActiveOtpCode(any()))
                     .thenReturn(Optional.empty());
 
             BusinessLogicException exception = assertThrows(
@@ -81,7 +82,7 @@ class ValidateOtpServiceTest {
         @Test
         @DisplayName("если otp-код просрочен, метод помечает его просроченным и выбрасывает бизнес-исключение")
         void otpCodeExpired_shouldMarkExpiredAndThrowBusinessLogicException() {
-            when(validateOtpRepository.getActiveOtpCode(org.mockito.ArgumentMatchers.any()))
+            when(validateOtpRepository.getActiveOtpCode(any()))
                     .thenReturn(Optional.of(buildExpiredOtpCode()));
 
             BusinessLogicException exception = assertThrows(
@@ -99,7 +100,7 @@ class ValidateOtpServiceTest {
         @Test
         @DisplayName("если otp-код неверный, метод выбрасывает бизнес-исключение")
         void otpCodeInvalid_shouldThrowBusinessLogicException() {
-            when(validateOtpRepository.getActiveOtpCode(org.mockito.ArgumentMatchers.any()))
+            when(validateOtpRepository.getActiveOtpCode(any()))
                     .thenReturn(Optional.of(buildActiveOtpCode()));
             when(passwordEncoder.matches(CODE, CODE_HASH))
                     .thenReturn(false);
@@ -119,7 +120,7 @@ class ValidateOtpServiceTest {
         @Test
         @DisplayName("если otp-код уже был использован другим запросом, метод выбрасывает бизнес-исключение")
         void otpCodeAlreadyUsedByConcurrentRequest_shouldThrowBusinessLogicException() {
-            when(validateOtpRepository.getActiveOtpCode(org.mockito.ArgumentMatchers.any()))
+            when(validateOtpRepository.getActiveOtpCode(any()))
                     .thenReturn(Optional.of(buildActiveOtpCode()));
             when(passwordEncoder.matches(CODE, CODE_HASH))
                     .thenReturn(true);
@@ -141,7 +142,7 @@ class ValidateOtpServiceTest {
         @Test
         @DisplayName("если otp-код корректный, метод помечает код использованным и возвращает успешный ответ")
         void otpCodeValid_shouldMarkUsedAndReturnSuccessResponse() {
-            when(validateOtpRepository.getActiveOtpCode(org.mockito.ArgumentMatchers.any()))
+            when(validateOtpRepository.getActiveOtpCode(any()))
                     .thenReturn(Optional.of(buildActiveOtpCode()));
             when(passwordEncoder.matches(CODE, CODE_HASH))
                     .thenReturn(true);

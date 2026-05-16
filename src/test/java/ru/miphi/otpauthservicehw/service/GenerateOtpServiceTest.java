@@ -23,6 +23,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -71,8 +72,8 @@ class GenerateOtpServiceTest {
             assertEquals(OTP_CONFIG_NOT_FOUND, exception.getErrorType());
 
             verify(generateOtpRepository).getOtpConfig();
-            verify(generateOtpRepository, never()).createOtpCode(org.mockito.ArgumentMatchers.any());
-            verify(generateOtpRepository, never()).createNotificationOutbox(org.mockito.ArgumentMatchers.any());
+            verify(generateOtpRepository, never()).createOtpCode(any());
+            verify(generateOtpRepository, never()).createNotificationOutbox(any());
         }
 
         @Test
@@ -92,8 +93,8 @@ class GenerateOtpServiceTest {
 
             verify(generateOtpRepository).getOtpConfig();
             verify(passwordEncoder).encode(anyString());
-            verify(generateOtpRepository, never()).createOtpCode(org.mockito.ArgumentMatchers.any());
-            verify(generateOtpRepository, never()).createNotificationOutbox(org.mockito.ArgumentMatchers.any());
+            verify(generateOtpRepository, never()).createOtpCode(any());
+            verify(generateOtpRepository, never()).createNotificationOutbox(any());
         }
 
         @Test
