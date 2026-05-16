@@ -10,7 +10,7 @@ import ru.miphi.otpauthservicehw.entity.response.RegisterEntityResponse;
 import ru.miphi.otpauthservicehw.enums.UserRole;
 
 import static lombok.AccessLevel.PRIVATE;
-import static ru.miphi.otpauthservicehw.repository.paths.QueryPath.*;
+import static ru.miphi.otpauthservicehw.enums.QueryPath.*;
 
 @Repository
 @RequiredArgsConstructor

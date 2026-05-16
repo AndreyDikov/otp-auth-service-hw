@@ -11,7 +11,7 @@ import ru.miphi.otpauthservicehw.entity.response.UpdateOtpConfigEntityResponse;
 import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
-import static ru.miphi.otpauthservicehw.repository.paths.QueryPath.UPDATE_OTP_CONFIG;
+import static ru.miphi.otpauthservicehw.enums.QueryPath.UPDATE_OTP_CONFIG;
 
 @Repository
 @RequiredArgsConstructor

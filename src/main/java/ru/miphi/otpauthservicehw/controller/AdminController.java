@@ -6,14 +6,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.miphi.otpauthservicehw.dto.request.GetUsersParamsRequest;
 import ru.miphi.otpauthservicehw.dto.request.UpdateOtpConfigRequest;
+import ru.miphi.otpauthservicehw.dto.response.GetUsersResponse;
 import ru.miphi.otpauthservicehw.dto.response.OtpConfigResponse;
-import ru.miphi.otpauthservicehw.dto.response.UserResponse;
 import ru.miphi.otpauthservicehw.service.DeleteUserService;
 import ru.miphi.otpauthservicehw.service.GetUsersService;
 import ru.miphi.otpauthservicehw.service.UpdateOtpConfigService;
-
-import java.util.List;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -38,9 +37,9 @@ public class AdminController {
     }
 
     @GetMapping(USERS)
-    @Operation(summary = "получение списка пользователей")
-    public ResponseEntity<List<UserResponse>> getUsers() {
-        return ResponseEntity.ok(getUsersService.getUsers());
+    @Operation(summary = "получение страницы пользователей")
+    public ResponseEntity<GetUsersResponse> getUsers(@ModelAttribute @Valid GetUsersParamsRequest request) {
+        return ResponseEntity.ok(getUsersService.getUsers(request));
     }
 
     @DeleteMapping(DELETE_USER)

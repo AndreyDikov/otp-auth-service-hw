@@ -12,7 +12,7 @@ import ru.miphi.otpauthservicehw.entity.response.GenerateOtpConfigEntityResponse
 import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
-import static ru.miphi.otpauthservicehw.repository.paths.QueryPath.*;
+import static ru.miphi.otpauthservicehw.enums.QueryPath.*;
 
 @Repository
 @RequiredArgsConstructor

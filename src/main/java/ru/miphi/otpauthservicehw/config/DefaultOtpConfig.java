@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import ru.miphi.otpauthservicehw.properties.DefaultOtpConfigProperties;
 
 import static lombok.AccessLevel.PRIVATE;
-import static ru.miphi.otpauthservicehw.repository.paths.QueryPath.INIT_DEFAULT_OTP_CONFIG;
+import static ru.miphi.otpauthservicehw.enums.QueryPath.INIT_DEFAULT_OTP_CONFIG;
 
 @Slf4j
 @Configuration

@@ -105,17 +105,21 @@ paths:
     get:
       tags:
       - admin-controller
-      summary: получение списка пользователей
+      summary: получение страницы пользователей
       operationId: getUsers
+      parameters:
+      - name: request
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/GetUsersParamsRequest"
       responses:
         "200":
           description: OK
           content:
             '*/*':
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/UserResponse"
+                $ref: "#/components/schemas/GetUsersResponse"
   /admin/users/{id}:
     delete:
       tags:
@@ -272,6 +276,43 @@ components:
       required:
       - code_length
       - ttl_seconds
+    GetUsersParamsRequest:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+          minimum: 0
+        size:
+          type: integer
+          format: int32
+          maximum: 100
+          minimum: 1
+    GetUsersResponse:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        total_elements:
+          type: integer
+          format: int64
+        total_pages:
+          type: integer
+          format: int32
+        users:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserResponse"
+      required:
+      - page
+      - size
+      - total_elements
+      - total_pages
+      - users
     UserResponse:
       type: object
       properties:

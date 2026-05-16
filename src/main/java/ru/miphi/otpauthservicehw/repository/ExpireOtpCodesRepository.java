@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
 import static lombok.AccessLevel.PRIVATE;
-import static ru.miphi.otpauthservicehw.repository.paths.QueryPath.EXPIRE_OTP_CODES;
+import static ru.miphi.otpauthservicehw.enums.QueryPath.EXPIRE_OTP_CODES;
 
 @Repository
 @RequiredArgsConstructor

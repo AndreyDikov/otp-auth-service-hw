@@ -10,7 +10,7 @@ import ru.miphi.otpauthservicehw.enums.UserRole;
 import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
-import static ru.miphi.otpauthservicehw.repository.paths.QueryPath.GET_USER_BY_LOGIN;
+import static ru.miphi.otpauthservicehw.enums.QueryPath.GET_USER_BY_LOGIN;
 
 @Repository
 @RequiredArgsConstructor

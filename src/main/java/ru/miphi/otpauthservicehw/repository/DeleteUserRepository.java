@@ -9,8 +9,8 @@ import ru.miphi.otpauthservicehw.enums.UserRole;
 import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
-import static ru.miphi.otpauthservicehw.repository.paths.QueryPath.DELETE_USER;
-import static ru.miphi.otpauthservicehw.repository.paths.QueryPath.GET_USER_ROLE_BY_ID;
+import static ru.miphi.otpauthservicehw.enums.QueryPath.DELETE_USER;
+import static ru.miphi.otpauthservicehw.enums.QueryPath.GET_USER_ROLE_BY_ID;
 
 @Repository
 @RequiredArgsConstructor
