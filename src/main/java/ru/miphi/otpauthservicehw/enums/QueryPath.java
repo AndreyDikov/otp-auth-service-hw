@@ -41,6 +41,8 @@ public enum QueryPath {
     CLAIM_PENDING_NOTIFICATION_OUTBOX("queries/notification_outbox/claim_pending_notification_outbox.sql"),
     MARK_NOTIFICATION_OUTBOX_SENT("queries/notification_outbox/mark_notification_outbox_sent.sql"),
     MARK_NOTIFICATION_OUTBOX_FAILED("queries/notification_outbox/mark_notification_outbox_failed.sql"),
+
+    DELETE_OLD_NOTIFICATION_OUTBOX("queries/delete_old_notification_outbox/delete_old_notification_outbox.sql"),
     ;
 
     @Nonnull

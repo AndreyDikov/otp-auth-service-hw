@@ -44,6 +44,12 @@ app:
       max-attempts: 3
       max-error-message-length: 1000
 
+    notification-outbox-cleanup:
+      fixed-delay-ms: 86400000
+      initial-delay-ms: 60000
+      sent-ttl-days: 7
+      failed-ttl-days: 30
+
   notification:
     file:
       path: otp-codes.txt
